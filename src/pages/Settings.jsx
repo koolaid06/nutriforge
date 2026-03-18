@@ -1,62 +1,69 @@
-import { useState } from 'react'
 import Layout from '../components/layout/Layout'
 import ProfileForm from '../components/settings/ProfileForm'
 import GoalSelector from '../components/settings/GoalSelector'
 import TargetDisplay from '../components/settings/TargetDisplay'
+import WeightTracker from '../components/settings/WeightTracker'
 import { useWeight } from '../hooks/useWeight'
 import { calcAllTargets } from '../utils/calculations'
 
 export default function Settings({ profile, saveProfile }) {
-  const { weightLog, addWeight, latestWeight } = useWeight()
-  const [weightInput, setWeightInput] = useState('')
+  const { weightLog, addWeight, setWeightForDate, removeWeight } = useWeight()
   const targets = calcAllTargets(profile)
-
-  function handleGoal(goal) {
-    saveProfile({ goal })
-  }
-
-  function logWeight() {
-    if (weightInput) {
-      addWeight(weightInput)
-      setWeightInput('')
-    }
-  }
 
   return (
     <Layout title="SETTINGS" profile={profile}>
-      <div className="max-w-4xl mx-auto space-y-6">
+      <div className="max-w-5xl mx-auto space-y-6">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <ProfileForm profile={profile} onSave={saveProfile} />
+        {/* Row 1: Profile + Goal & Weight side by side */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
+          {/* Left — Profile */}
+          <div className="space-y-1.5">
+            <SectionLabel n="1" title="Your Profile" />
+            <ProfileForm profile={profile} onSave={saveProfile} />
+          </div>
+
+          {/* Right — Goal then Weight stacked */}
           <div className="space-y-6">
-            <GoalSelector goal={profile?.goal ?? 'maintain'} onSelect={handleGoal} />
+            <div className="space-y-1.5">
+              <SectionLabel n="2" title="Your Goal" />
+              <GoalSelector goal={profile?.goal ?? 'maintain'} onSelect={goal => saveProfile({ goal })} />
+            </div>
 
-            {/* Weight log */}
-            <div className="card space-y-4">
-              <p className="label">LOG TODAY'S WEIGHT</p>
-              {latestWeight && (
-                <p className="text-forge-subtext text-sm">
-                  Last logged: <span className="text-forge-accent font-mono">{latestWeight} kg</span>
-                </p>
-              )}
-              <div className="flex gap-3">
-                <input
-                  type="number" value={weightInput}
-                  onChange={e => setWeightInput(e.target.value)}
-                  placeholder="e.g. 74.5"
-                  className="flex-1 bg-forge-surface border border-forge-border rounded-xl px-4 py-2.5
-                             text-forge-text text-sm font-mono placeholder-forge-muted
-                             focus:outline-none focus:border-forge-accent transition-colors"
-                />
-                <button onClick={logWeight} className="btn-primary px-6">LOG</button>
-              </div>
+            <div className="space-y-1.5">
+              <SectionLabel n="3" title="Weight Tracker" />
+              <WeightTracker
+                weightLog={weightLog}
+                addWeight={addWeight}
+                setWeightForDate={setWeightForDate}
+                removeWeight={removeWeight}
+              />
             </div>
           </div>
         </div>
 
-        <TargetDisplay targets={targets} />
+        {/* Row 2: Targets full width */}
+        <div className="space-y-1.5">
+          <div className="flex items-center gap-2">
+            <SectionLabel n="4" title="Your Calculated Targets" />
+            <span className="text-forge-muted text-xs font-mono">— updates automatically</span>
+          </div>
+          <TargetDisplay targets={targets} />
+        </div>
 
       </div>
     </Layout>
+  )
+}
+
+function SectionLabel({ n, title }) {
+  return (
+    <div className="flex items-center gap-2 px-1">
+      <span className="w-5 h-5 rounded-full bg-forge-accent text-forge-bg font-mono text-[10px]
+                       flex items-center justify-center flex-shrink-0 font-bold">
+        {n}
+      </span>
+      <p className="text-forge-text text-sm font-medium">{title}</p>
+    </div>
   )
 }

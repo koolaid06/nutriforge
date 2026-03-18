@@ -43,10 +43,10 @@ export function useMeals(date = todayKey()) {
   }, [date])
 
   const totals = meals.reduce((acc, m) => ({
-    calories: acc.calories + m.calories,
-    protein:  acc.protein  + m.protein,
-    carbs:    acc.carbs    + m.carbs,
-    fat:      acc.fat      + m.fat,
+    calories: Math.round((acc.calories + m.calories) * 10) / 10,
+    protein:  Math.round((acc.protein  + m.protein)  * 10) / 10,
+    carbs:    Math.round((acc.carbs    + m.carbs)    * 10) / 10,
+    fat:      Math.round((acc.fat      + m.fat)      * 10) / 10,
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 })
 
   return { meals, addMeal, deleteMeal, totals }

@@ -7,32 +7,43 @@ function load() {
   catch { return [] }
 }
 
+function persist(log) {
+  localStorage.setItem(KEY, JSON.stringify(log))
+  return log
+}
+
 export function useWeight() {
   const [weightLog, setWeightLog] = useState(load)
 
+  // Log today's weight
   const addWeight = useCallback((weight) => {
-    const entry = {
-      date:   new Date().toISOString().slice(0, 10),
-      weight: Number(weight),
-    }
+    const date = new Date().toISOString().slice(0, 10)
     setWeightLog(prev => {
-      // Replace if same day
-      const filtered = prev.filter(e => e.date !== entry.date)
-      const next = [...filtered, entry].sort((a, b) => a.date.localeCompare(b.date))
-      localStorage.setItem(KEY, JSON.stringify(next))
-      return next
+      const next = [
+        ...prev.filter(e => e.date !== date),
+        { date, weight: Number(weight) },
+      ].sort((a, b) => a.date.localeCompare(b.date))
+      return persist(next)
     })
   }, [])
 
-  const removeWeight = useCallback((date) => {
+  // Set weight for any specific date (add or overwrite)
+  const setWeightForDate = useCallback((date, weight) => {
     setWeightLog(prev => {
-      const next = prev.filter(e => e.date !== date)
-      localStorage.setItem(KEY, JSON.stringify(next))
-      return next
+      const next = [
+        ...prev.filter(e => e.date !== date),
+        { date, weight: Number(weight) },
+      ].sort((a, b) => a.date.localeCompare(b.date))
+      return persist(next)
     })
+  }, [])
+
+  // Remove a specific date's entry
+  const removeWeight = useCallback((date) => {
+    setWeightLog(prev => persist(prev.filter(e => e.date !== date)))
   }, [])
 
   const latestWeight = weightLog.length ? weightLog[weightLog.length - 1].weight : null
 
-  return { weightLog, addWeight, removeWeight, latestWeight }
+  return { weightLog, addWeight, setWeightForDate, removeWeight, latestWeight }
 }

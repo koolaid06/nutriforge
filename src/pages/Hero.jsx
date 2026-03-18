@@ -27,7 +27,7 @@ const STATS = [
   { value: '2,000+', label: 'Foods in USDA database' },
   { value: '16wk',   label: 'Consistency calendar view' },
   { value: '7',      label: 'Metrics tracked per meal' },
-  { value: '3',    label: 'different plans to suit your needs' },
+  { value: '500',    label: 'kcal deficit for a clean cut' },
 ]
 
 export default function Hero({ onEnter }) {
@@ -60,7 +60,7 @@ export default function Hero({ onEnter }) {
 
       {/* Nav bar */}
       <nav
-        className="relative z-10 flex items-center justify-between px-8 py-6"
+        className="relative z-10 flex items-center justify-between px-4 lg:px-8 py-4 lg:py-6"
         style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease' }}
       >
         <div className="flex items-center gap-3">
@@ -78,7 +78,7 @@ export default function Hero({ onEnter }) {
       </nav>
 
       {/* Hero content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-6 text-center">
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 lg:px-6 text-center py-8">
 
         {/* Badge */}
         <div
@@ -147,6 +147,10 @@ export default function Hero({ onEnter }) {
             }}
           >
             START FORGING
+            <span
+              className="inline-block ml-3 transition-transform duration-200"
+              style={{ transform: hovering ? 'translateX(6px)' : 'translateX(0)' }}
+            >→</span>
           </button>
           <p className="text-forge-muted text-xs font-mono mt-3">
             No sign-up. No cloud. Everything stays on your device.
@@ -155,7 +159,7 @@ export default function Hero({ onEnter }) {
 
         {/* Stats strip */}
         <div
-          className="grid grid-cols-4 gap-px bg-forge-border rounded-2xl overflow-hidden mt-16 w-full max-w-2xl"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border rounded-2xl overflow-hidden mt-10 lg:mt-16 w-full max-w-2xl"
           style={{
             opacity: visible ? 1 : 0,
             transform: visible ? 'translateY(0)' : 'translateY(16px)',
@@ -173,8 +177,7 @@ export default function Hero({ onEnter }) {
 
       {/* Features grid */}
       <div
-        className="relative z-10 grid grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border
-                   border-t border-forge-border"
+        className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border border-t border-forge-border"
         style={{
           opacity: visible ? 1 : 0,
           transition: 'opacity 0.8s ease 0.8s',
@@ -183,7 +186,7 @@ export default function Hero({ onEnter }) {
         {FEATURES.map(({ icon, title, desc }) => (
           <div
             key={title}
-            className="bg-forge-surface px-6 py-8 group hover:bg-forge-card transition-colors duration-200"
+            className="bg-forge-surface px-4 lg:px-6 py-6 lg:py-8 group hover:bg-forge-card transition-colors duration-200"
           >
             <span className="text-forge-accent text-2xl mb-4 block">{icon}</span>
             <p className="font-display text-lg text-forge-text tracking-wide mb-2 group-hover:text-forge-accent transition-colors">

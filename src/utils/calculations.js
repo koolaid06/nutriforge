@@ -24,14 +24,26 @@ export function calcTargetCalories(tdee, goal) {
 /**
  * Returns macro targets in grams
  * Protein & carbs = 4 kcal/g, fat = 9 kcal/g
+ *
+ * Protein is capped at 2.2g/kg bodyweight (evidence-based upper limit).
+ * Remaining calories after protein + fat are assigned to carbs.
  */
-export function calcMacros(targetCalories, goal) {
+export function calcMacros(targetCalories, goal, weight) {
   const ratios = MACRO_RATIOS[goal] ?? MACRO_RATIOS.maintain
-  return {
-    protein: Math.round((targetCalories * ratios.protein) / 4),
-    carbs:   Math.round((targetCalories * ratios.carbs)   / 4),
-    fat:     Math.round((targetCalories * ratios.fat)     / 9),
-  }
+
+  // Protein: ratio-based but capped at 2.2g per kg bodyweight
+  const proteinFromRatio = Math.round((targetCalories * ratios.protein) / 4)
+  const proteinCap       = weight ? Math.round(weight * 2.2) : proteinFromRatio
+  const protein          = Math.min(proteinFromRatio, proteinCap)
+
+  // Fat: fixed ratio
+  const fat = Math.round((targetCalories * ratios.fat) / 9)
+
+  // Carbs: remaining calories after protein and fat
+  const usedCalories = protein * 4 + fat * 9
+  const carbs        = Math.round(Math.max(0, targetCalories - usedCalories) / 4)
+
+  return { protein, carbs, fat }
 }
 
 export function calcAllTargets(profile) {
@@ -39,6 +51,6 @@ export function calcAllTargets(profile) {
   const bmr     = calcBMR(profile)
   const tdee    = calcTDEE(bmr, profile.activity)
   const target  = calcTargetCalories(tdee, profile.goal)
-  const macros  = calcMacros(target, profile.goal)
+  const macros  = calcMacros(target, profile.goal, profile.weight)
   return { bmr, tdee, targetCalories: target, macros }
 }
