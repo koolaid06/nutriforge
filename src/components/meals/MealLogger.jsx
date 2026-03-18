@@ -1,8 +1,8 @@
 import { useState, useRef, useEffect } from 'react'
 
-// USDA FoodData Central — free, no API key required for demo key
-const USDA_API = 'https://api.nal.usda.gov/fdc/v1'
-const API_KEY  = 'DEMO_KEY'  // rate-limited: 30 req/hr. Get a free key at https://fdc.nal.usda.gov/api-key-signup
+// Calls our own /api/food-search proxy (Vercel serverless function)
+// which forwards to USDA FoodData Central server-side — avoids CORS issues
+const FOOD_SEARCH_URL = '/api/food-search'
 
 // Common portion presets in grams
 const PORTION_PRESETS = [25, 50, 75, 100, 150, 200, 250, 300]
@@ -58,7 +58,7 @@ export default function MealLogger({ onAdd }) {
     setError('')
     try {
       const res = await fetch(
-        `${USDA_API}/foods/search?query=${encodeURIComponent(q)}&dataType=Foundation,SR%20Legacy,Branded&pageSize=25&api_key=${API_KEY}`
+        `${FOOD_SEARCH_URL}?query=${encodeURIComponent(q)}`
       )
       if (!res.ok) throw new Error('Search failed')
       const data = await res.json()
@@ -183,7 +183,7 @@ export default function MealLogger({ onAdd }) {
             )}
 
             {searched && results.length === 0 && !loading && (
-              <p className="text-forge-subtext text-xs mt-2 font-mono">No results for "{query}"</p>
+              <p className="text-forge-subtext text-xs mt-2 font-mono">No results for &quot;{query}&quot;</p>
             )}
           </div>
 
