@@ -94,6 +94,7 @@ export default function MealLogger({ onAdd }) {
     setResults([])
     setQuery(food.description)
     setPortion(100)
+    setSearched(false)
   }
 
   function reset() {
