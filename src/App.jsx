@@ -13,6 +13,30 @@ import MealLog         from './pages/MealLog'
 import Analytics       from './pages/Analytics'
 import Settings        from './pages/Settings'
 
+// Handles Supabase magic link redirects and unknown routes
+function CatchAll({ isSetup }) {
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    // Supabase puts session tokens in the URL hash after magic link redirect
+    const hash = window.location.hash
+    const isAuthRedirect = hash.includes('access_token') || hash.includes('type=magiclink')
+
+    if (isAuthRedirect) {
+      // Clear the hash from the URL cleanly, then go to hero
+      window.history.replaceState(null, '', window.location.pathname)
+    }
+    // Always start at hero — it's the entry point every time
+    navigate('/hero', { replace: true })
+  }, [])
+
+  return (
+    <div className="min-h-screen bg-forge-bg flex items-center justify-center">
+      <div className="w-8 h-8 border-2 border-forge-accent/30 border-t-forge-accent rounded-full animate-spin" />
+    </div>
+  )
+}
+
 // ── Inner app — router is already mounted here ────────────
 function AppInner({ profile, saveProfile, weightLog, isSetup, saveProfile: sp }) {
   const { user } = useAuth()
@@ -27,11 +51,9 @@ function AppInner({ profile, saveProfile, weightLog, isSetup, saveProfile: sp })
   return (
     <Routes>
       <Route path="/hero"       element={<Hero       isSetup={isSetup} onEnter={(choice) => {
-        localStorage.setItem('nf_hero_seen', 'true')
         if (choice === 'login') {
           navigate('/login')
         } else {
-          // offline — go to onboarding if new, dashboard if returning
           isSetup ? navigate('/') : navigate('/onboarding')
         }
       }} />} />
@@ -41,11 +63,7 @@ function AppInner({ profile, saveProfile, weightLog, isSetup, saveProfile: sp })
       <Route path="/log"        element={<MealLog    profile={profile} onLogoClick={goHero} />} />
       <Route path="/analytics"  element={<Analytics  profile={profile} weightLog={weightLog} onLogoClick={goHero} />} />
       <Route path="/settings"   element={<Settings   profile={profile} saveProfile={saveProfile} onEnableSync={goLogin} onLogoClick={goHero} />} />
-      <Route path="*"           element={
-        <Navigate to={
-          isSetup && localStorage.getItem('nf_hero_seen') === 'true' ? '/' : '/hero'
-        } replace />
-      } />
+      <Route path="*"           element={<CatchAll isSetup={isSetup} />} />
     </Routes>
   )
 }
