@@ -4,27 +4,25 @@ export default function TopBar({ title, profile }) {
   })
 
   return (
-    <header className="h-14 lg:h-16 bg-forge-surface border-b border-forge-border px-4 lg:px-6
+    <header className="h-14 bg-forge-surface border-b border-forge-border px-4
                        flex items-center justify-between sticky top-0 z-30">
-      <div>
-        <h1 className="font-display text-xl lg:text-2xl text-forge-text tracking-wider leading-none">
+      <div className="min-w-0">
+        <h1 className="font-display text-xl text-forge-text tracking-wider leading-none truncate">
           {title}
         </h1>
-        <p className="label text-[10px] hidden sm:block mt-0.5">{today}</p>
+        <p className="label text-[10px] hidden sm:block mt-0.5 truncate">{today}</p>
       </div>
 
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 flex-shrink-0 ml-2">
         {profile?.streak > 0 && (
           <div className="flex items-center gap-1.5 bg-forge-accent/10 border border-forge-accent/20
-                          px-2.5 py-1.5 rounded-full">
+                          px-2 py-1 rounded-full">
             <span className="text-forge-accent text-xs">🔥</span>
-            <span className="font-mono text-forge-accent text-xs font-semibold">
-              {profile.streak}d
-            </span>
+            <span className="font-mono text-forge-accent text-xs font-semibold">{profile.streak}d</span>
           </div>
         )}
-        <div className="w-8 h-8 rounded-full bg-forge-border flex items-center justify-center flex-shrink-0">
-          <span className="text-forge-subtext text-sm font-mono">
+        <div className="w-7 h-7 rounded-full bg-forge-border flex items-center justify-center">
+          <span className="text-forge-subtext text-xs font-mono">
             {profile?.name?.[0]?.toUpperCase() ?? '?'}
           </span>
         </div>

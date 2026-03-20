@@ -3,25 +3,36 @@
 @tailwind utilities;
 
 @layer base {
-  * { box-sizing: border-box; }
+  *, *::before, *::after { box-sizing: border-box; }
+
+  html { overflow-x: hidden; }
 
   body {
     background-color: #0a0a0f;
     color: #e2e2f0;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
-    /* Prevent horizontal scroll on mobile */
     overflow-x: hidden;
+    /* Prevent text size inflation on mobile */
+    -webkit-text-size-adjust: 100%;
   }
 
-  ::-webkit-scrollbar { width: 4px; }
+  /* Remove number spinners globally */
+  input[type=number] { -moz-appearance: textfield; }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
   ::-webkit-scrollbar-track { background: #0a0a0f; }
   ::-webkit-scrollbar-thumb { background: #1e1e2e; border-radius: 2px; }
 }
 
 @layer components {
   .card {
-    @apply bg-forge-card border border-forge-border rounded-2xl p-4 lg:p-5;
+    @apply bg-forge-card border border-forge-border rounded-2xl p-4;
   }
 
   .btn-primary {
@@ -38,33 +49,16 @@
     @apply text-xs font-mono text-forge-subtext uppercase tracking-widest;
   }
 
-  .value-lg {
-    @apply font-display text-4xl text-forge-text leading-none;
-  }
-
   .tag {
     @apply inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-md;
   }
 }
 
 @layer utilities {
-  .text-accent { color: #e8ff47; }
-
   .safe-area-pb {
     padding-bottom: env(safe-area-inset-bottom, 8px);
   }
-
   .animate-delay-100 { animation-delay: 100ms; }
   .animate-delay-200 { animation-delay: 200ms; }
   .animate-delay-300 { animation-delay: 300ms; }
-
-  /* Hide number input spinners globally */
-  input[type=number] {
-    -moz-appearance: textfield;
-  }
-  input[type=number]::-webkit-outer-spin-button,
-  input[type=number]::-webkit-inner-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
-  }
 }

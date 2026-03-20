@@ -7,13 +7,13 @@ import { useWeight } from '../hooks/useWeight'
 import { useAuth }   from '../hooks/useAuth'
 import { calcAllTargets } from '../utils/calculations'
 
-export default function Settings({ profile, saveProfile, onEnableSync }) {
+export default function Settings({ profile, saveProfile, onEnableSync, onLogoClick }) {
   const { weightLog, addWeight, setWeightForDate, removeWeight } = useWeight()
   const { user, signOut } = useAuth()
   const targets = calcAllTargets(profile)
 
   return (
-    <Layout title="SETTINGS" profile={profile}>
+    <Layout title="SETTINGS" profile={profile} onLogoClick={onLogoClick}>
       <div className="max-w-5xl mx-auto space-y-6">
 
         {/* Row 1: Profile + Goal & Weight side by side */}

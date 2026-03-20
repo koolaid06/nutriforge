@@ -8,7 +8,7 @@ import { pushMeals }    from '../hooks/useSync'
 import { calcAllTargets } from '../utils/calculations'
 import { todayKey }     from '../utils/dateHelpers'
 
-export default function MealLog({ profile }) {
+export default function MealLog({ profile, onLogoClick }) {
   const { meals, addMeal, editMeal, deleteMeal, totals } = useMeals()
   const { user } = useAuth()
   const targets  = calcAllTargets(profile)
@@ -20,7 +20,7 @@ export default function MealLog({ profile }) {
   }
 
   return (
-    <Layout title="MEAL LOG" profile={profile}>
+    <Layout title="MEAL LOG" profile={profile} onLogoClick={onLogoClick}>
       <div className="max-w-3xl mx-auto space-y-3 lg:space-y-6">
         <MealLogger onAdd={addMeal} onClose={handleLoggerClose} meals={meals} />
         <MacroFeedback totals={totals} targets={targets} />

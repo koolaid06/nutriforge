@@ -8,15 +8,20 @@ export function useAuth() {
   useEffect(() => {
     if (!supabase) { setLoading(false); return }
 
-    // Get initial session
+    // Restore existing session from localStorage (persisted across browser closes)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null)
+    // Listen for all auth events — TOKEN_REFRESHED keeps user logged in automatically
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+        setUser(session?.user ?? null)
+      }
+      if (event === 'SIGNED_OUT') {
+        setUser(null)
+      }
     })
 
     return () => subscription.unsubscribe()

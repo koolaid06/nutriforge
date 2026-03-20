@@ -1,11 +1,11 @@
 import { DesktopSidebar, MobileNav } from './Sidebar'
 import TopBar from './TopBar'
 
-export default function Layout({ title, profile, children }) {
+export default function Layout({ title, profile, children, onLogoClick }) {
   return (
     <div className="min-h-screen bg-forge-bg">
       {/* Desktop: left sidebar */}
-      <DesktopSidebar />
+      <DesktopSidebar onLogoClick={onLogoClick} />
 
       {/* Main content — offset for desktop sidebar, bottom padding for mobile nav */}
       <div className="lg:ml-56 min-h-screen flex flex-col">
@@ -16,7 +16,7 @@ export default function Layout({ title, profile, children }) {
       </div>
 
       {/* Mobile: bottom nav */}
-      <MobileNav />
+      <MobileNav onLogoClick={onLogoClick} />
     </div>
   )
 }
