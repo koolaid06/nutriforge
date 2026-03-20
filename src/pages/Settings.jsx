@@ -4,10 +4,12 @@ import GoalSelector from '../components/settings/GoalSelector'
 import TargetDisplay from '../components/settings/TargetDisplay'
 import WeightTracker from '../components/settings/WeightTracker'
 import { useWeight } from '../hooks/useWeight'
+import { useAuth }   from '../hooks/useAuth'
 import { calcAllTargets } from '../utils/calculations'
 
-export default function Settings({ profile, saveProfile }) {
+export default function Settings({ profile, saveProfile, onEnableSync }) {
   const { weightLog, addWeight, setWeightForDate, removeWeight } = useWeight()
+  const { user, signOut } = useAuth()
   const targets = calcAllTargets(profile)
 
   return (
@@ -40,6 +42,29 @@ export default function Settings({ profile, saveProfile }) {
               />
             </div>
           </div>
+        </div>
+
+        {/* Sync status */}
+        <div className="card flex items-center justify-between gap-4 p-4">
+          <div>
+            {user ? (
+              <>
+                <p className="text-forge-text text-sm font-medium">✓ Synced to cloud</p>
+                <p className="text-forge-subtext text-xs mt-0.5 font-mono">{user.email}</p>
+              </>
+            ) : (
+              <>
+                <p className="text-forge-text text-sm font-medium">Offline mode</p>
+                <p className="text-forge-subtext text-xs mt-0.5">Data stored on this device only</p>
+              </>
+            )}
+          </div>
+          {user
+            ? <button onClick={signOut} className="btn-ghost text-xs px-4 py-2 flex-shrink-0">SIGN OUT</button>
+            : <button onClick={onEnableSync} className="btn-primary text-xs px-4 py-2 flex-shrink-0">
+                ENABLE SYNC
+              </button>
+          }
         </div>
 
         {/* Row 2: Targets full width */}

@@ -10,6 +10,8 @@
     color: #e2e2f0;
     font-family: 'DM Sans', sans-serif;
     -webkit-font-smoothing: antialiased;
+    /* Prevent horizontal scroll on mobile */
+    overflow-x: hidden;
   }
 
   ::-webkit-scrollbar { width: 4px; }
@@ -19,7 +21,7 @@
 
 @layer components {
   .card {
-    @apply bg-forge-card border border-forge-border rounded-2xl p-5;
+    @apply bg-forge-card border border-forge-border rounded-2xl p-4 lg:p-5;
   }
 
   .btn-primary {
@@ -41,17 +43,28 @@
   }
 
   .tag {
-    @apply inline-flex items-center gap-1 text-xs font-mono px-2.5 py-1 rounded-md;
+    @apply inline-flex items-center gap-1 text-xs font-mono px-2 py-0.5 rounded-md;
   }
 }
 
 @layer utilities {
   .text-accent { color: #e8ff47; }
-  .bg-noise {
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+
+  .safe-area-pb {
+    padding-bottom: env(safe-area-inset-bottom, 8px);
   }
+
   .animate-delay-100 { animation-delay: 100ms; }
   .animate-delay-200 { animation-delay: 200ms; }
   .animate-delay-300 { animation-delay: 300ms; }
-  .safe-area-pb { padding-bottom: env(safe-area-inset-bottom, 0px); }
+
+  /* Hide number input spinners globally */
+  input[type=number] {
+    -moz-appearance: textfield;
+  }
+  input[type=number]::-webkit-outer-spin-button,
+  input[type=number]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
 }

@@ -14,6 +14,8 @@ function saveMeals(date, meals) {
   localStorage.setItem(keyFor(date), JSON.stringify(meals))
 }
 
+function r(n) { return Math.round(Number(n) * 10) / 10 }
+
 export function useMeals(date = todayKey()) {
   const [meals, setMeals] = useState(() => loadMeals(date))
 
@@ -21,14 +23,29 @@ export function useMeals(date = todayKey()) {
     const entry = {
       id:       Date.now().toString(),
       name:     meal.name,
-      calories: Number(meal.calories) || 0,
-      protein:  Number(meal.protein)  || 0,
-      carbs:    Number(meal.carbs)    || 0,
-      fat:      Number(meal.fat)      || 0,
+      calories: r(meal.calories) || 0,
+      protein:  r(meal.protein)  || 0,
+      carbs:    r(meal.carbs)    || 0,
+      fat:      r(meal.fat)      || 0,
       time:     new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
     }
     setMeals(prev => {
       const next = [...prev, entry]
+      saveMeals(date, next)
+      return next
+    })
+  }, [date])
+
+  const editMeal = useCallback((id, updates) => {
+    setMeals(prev => {
+      const next = prev.map(m => m.id !== id ? m : {
+        ...m,
+        name:     updates.name     ?? m.name,
+        calories: r(updates.calories ?? m.calories),
+        protein:  r(updates.protein  ?? m.protein),
+        carbs:    r(updates.carbs    ?? m.carbs),
+        fat:      r(updates.fat      ?? m.fat),
+      })
       saveMeals(date, next)
       return next
     })
@@ -43,23 +60,22 @@ export function useMeals(date = todayKey()) {
   }, [date])
 
   const totals = meals.reduce((acc, m) => ({
-    calories: Math.round((acc.calories + m.calories) * 10) / 10,
-    protein:  Math.round((acc.protein  + m.protein)  * 10) / 10,
-    carbs:    Math.round((acc.carbs    + m.carbs)    * 10) / 10,
-    fat:      Math.round((acc.fat      + m.fat)      * 10) / 10,
+    calories: r(acc.calories + (m.calories || 0)),
+    protein:  r(acc.protein  + (m.protein  || 0)),
+    carbs:    r(acc.carbs    + (m.carbs    || 0)),
+    fat:      r(acc.fat      + (m.fat      || 0)),
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 })
 
-  return { meals, addMeal, deleteMeal, totals }
+  return { meals, addMeal, editMeal, deleteMeal, totals }
 }
 
-// Utility: get totals for any date
 export function getMealTotals(date) {
   const meals = loadMeals(date)
   return meals.reduce((acc, m) => ({
-    calories: acc.calories + m.calories,
-    protein:  acc.protein  + m.protein,
-    carbs:    acc.carbs    + m.carbs,
-    fat:      acc.fat      + m.fat,
+    calories: r(acc.calories + (m.calories || 0)),
+    protein:  r(acc.protein  + (m.protein  || 0)),
+    carbs:    r(acc.carbs    + (m.carbs    || 0)),
+    fat:      r(acc.fat      + (m.fat      || 0)),
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 })
 }
 
