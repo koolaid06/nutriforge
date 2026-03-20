@@ -72,8 +72,6 @@ NutriForge calculates your personalised calorie and macro targets using the **Mi
 
 ```
 nutriforge/
-├── api/
-│   └── food-search.js          # Vercel serverless proxy → USDA API
 ├── public/
 │   ├── index.html
 │   └── favicon.png
