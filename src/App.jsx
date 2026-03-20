@@ -14,12 +14,17 @@ import MealLog         from './pages/MealLog'
 import Analytics       from './pages/Analytics'
 import Settings        from './pages/Settings'
 
-function AppInner({ profile, saveProfile, weightLog, isSetup }) {
+function AppInner({ profile, saveProfile, weightLog, isSetup, postAuthPath }) {
   const { user } = useAuth()
   const navigate = useNavigate()
 
   useSyncProfile(user, profile)
   useSyncWeight(user, weightLog)
+
+  // After magic link login + sync, redirect to correct page
+  useEffect(() => {
+    if (postAuthPath) navigate(postAuthPath, { replace: true })
+  }, [postAuthPath])
 
   const goHero  = () => navigate('/')
   const goLogin = () => navigate('/login')
@@ -28,10 +33,17 @@ function AppInner({ profile, saveProfile, weightLog, isSetup }) {
     <Routes>
       {/* Hero is the root — always the entry point */}
       <Route path="/" element={
-        <Hero isSetup={isSetup} onEnter={(choice) => {
-          if (choice === 'login') navigate('/login')
-          else isSetup ? navigate('/dashboard') : navigate('/onboarding')
-        }} />
+        <Hero
+          isSetup={isSetup}
+          isLoggedIn={!!user}
+          onEnter={(choice) => {
+            if (choice === 'login') navigate('/login')
+            else isSetup ? navigate('/dashboard') : navigate('/onboarding')
+          }}
+          onAuthRedirect={() => {
+            isSetup ? navigate('/dashboard') : navigate('/onboarding')
+          }}
+        />
       } />
 
       <Route path="/login" element={
@@ -62,11 +74,20 @@ export default function App() {
   const { weightLog } = useWeight()
   const { user, loading } = useAuth()
   const [syncing, setSyncing] = useState(false)
+  const [postAuthPath, setPostAuthPath] = useState(null)
 
   useEffect(() => {
     if (!user) return
     setSyncing(true)
-    pullFromSupabase(user.id).finally(() => setSyncing(false))
+    pullFromSupabase(user.id).finally(() => {
+      setSyncing(false)
+      // After syncing, redirect to dashboard if we came from a magic link
+      const hash = window.location.hash
+      if (hash.includes('access_token')) {
+        window.history.replaceState(null, '', window.location.pathname)
+        setPostAuthPath(isSetup ? '/dashboard' : '/onboarding')
+      }
+    })
   }, [user?.id])
 
   if (loading || syncing) {
@@ -85,6 +106,7 @@ export default function App() {
         saveProfile={saveProfile}
         weightLog={weightLog}
         isSetup={isSetup}
+        postAuthPath={postAuthPath}
       />
     </BrowserRouter>
   )

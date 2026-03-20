@@ -14,19 +14,34 @@ const STATS = [
   { value: '500',    label: 'kcal deficit for a clean cut' },
 ]
 
-export default function Hero({ onEnter, isSetup }) {
+export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
   const [visible, setVisible]   = useState(false)
   const [hovering, setHovering] = useState(false)
-  const [prompt, setPrompt]     = useState(false)  // show choice modal
+  const [prompt, setPrompt]     = useState(false)
 
   useEffect(() => {
     const t = setTimeout(() => setVisible(true), 100)
     return () => clearTimeout(t)
   }, [])
 
-  // Called by both the main CTA and "ENTER APP →" nav button
+  // Detect Supabase magic link redirect
+  useEffect(() => {
+    const hash = window.location.hash
+    if (hash && (hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=recovery'))) {
+      window.history.replaceState(null, '', window.location.pathname)
+      setTimeout(() => {
+        if (onAuthRedirect) onAuthRedirect()
+      }, 800)
+    }
+  }, [])
+
+  // If already logged in, clicking Start Forging goes straight to dashboard
   function handleStartClick() {
-    setPrompt(true)
+    if (isLoggedIn || isSetup) {
+      onEnter('offline') // offline = skip login, go to dashboard
+    } else {
+      setPrompt(true)
+    }
   }
 
   return (
