@@ -1,33 +1,33 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
-const COLORS = ['#e8ff47', '#4facfe', '#ff6b35', '#ff3b5c']
+const COLORS = ['#e8ff47', '#4facfe', '#ff6b35']
 
 export default function MacroRing({ totals, targets }) {
-  const data = [
+  const macros = [
     { name: 'Protein', value: Math.round(totals.protein * 10) / 10, target: targets?.macros?.protein },
-    { name: 'Carbs',   value: Math.round(totals.carbs * 10) / 10,   target: targets?.macros?.carbs   },
-    { name: 'Fat',     value: Math.round(totals.fat * 10) / 10,     target: targets?.macros?.fat     },
+    { name: 'Carbs',   value: Math.round(totals.carbs   * 10) / 10, target: targets?.macros?.carbs   },
+    { name: 'Fat',     value: Math.round(totals.fat     * 10) / 10, target: targets?.macros?.fat     },
   ]
 
   const calPct = targets?.targetCalories
     ? Math.min(100, Math.round((totals.calories / targets.targetCalories) * 100))
     : 0
-
   const remaining = (targets?.targetCalories ?? 0) - totals.calories
 
   return (
-    <div className="card space-y-3">
+    <div className="card flex flex-col gap-5">
       <p className="label">TODAY'S INTAKE</p>
 
-      <div className="flex items-center gap-4">
+      {/* Ring + info side by side */}
+      <div className="flex items-center gap-6">
         {/* Donut */}
-        <div className="relative w-28 h-28 flex-shrink-0">
+        <div className="relative flex-shrink-0 w-36 h-36 lg:w-40 lg:h-40">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={[{ value: calPct }, { value: 100 - calPct }]}
                 cx="50%" cy="50%"
-                innerRadius={42} outerRadius={54}
+                innerRadius="62%" outerRadius="78%"
                 startAngle={90} endAngle={-270}
                 dataKey="value" strokeWidth={0}
               >
@@ -36,24 +36,30 @@ export default function MacroRing({ totals, targets }) {
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="font-display text-2xl text-forge-text leading-none">{totals.calories}</span>
-            <span className="label text-[9px]">kcal</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
+            <span className="font-display text-4xl text-forge-text leading-none">{totals.calories}</span>
+            <span className="label text-[10px]">kcal</span>
           </div>
         </div>
 
-        {/* Info */}
-        <div className="flex-1 min-w-0 space-y-2">
-          <p className={`text-sm font-mono font-semibold ${remaining >= 0 ? 'text-forge-accent' : 'text-forge-red'}`}>
-            {remaining >= 0 ? `${remaining} kcal left` : `${Math.abs(remaining)} kcal over`}
+        {/* Right side */}
+        <div className="flex-1 space-y-3">
+          <p className={`text-base font-mono font-semibold ${remaining >= 0 ? 'text-forge-accent' : 'text-forge-red'}`}>
+            {remaining >= 0
+              ? `${remaining} kcal remaining`
+              : `${Math.abs(remaining)} kcal over target`}
           </p>
-          <div className="grid grid-cols-3 gap-1.5">
-            {data.map(({ name, value, target }, i) => (
-              <div key={name} className="bg-forge-surface rounded-lg p-2 text-center">
-                <div className="w-1.5 h-1.5 rounded-full mx-auto mb-1" style={{ background: COLORS[i] }} />
-                <p className="font-mono text-xs font-semibold leading-none" style={{ color: COLORS[i] }}>{value}g</p>
-                <p className="label text-[9px] mt-0.5 truncate">{name}</p>
-                {target && <p className="text-forge-muted text-[9px] font-mono">/{target}g</p>}
+          <div className="space-y-2">
+            {macros.map(({ name, value, target }, i) => (
+              <div key={name} className="flex items-center justify-between gap-2">
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: COLORS[i] }} />
+                  <span className="text-sm font-body text-forge-subtext">{name}</span>
+                </div>
+                <span className="font-mono text-sm">
+                  <span style={{ color: COLORS[i] }}>{value}g</span>
+                  {target && <span className="text-forge-muted"> /{target}g</span>}
+                </span>
               </div>
             ))}
           </div>
