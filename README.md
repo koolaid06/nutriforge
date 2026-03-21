@@ -62,7 +62,6 @@ NutriForge calculates your personalised calorie and macro targets using the **Mi
 | Recharts 2 | Charts and data visualisation |
 | Supabase JS | Auth (magic link) + Postgres sync |
 | Vercel | Hosting + serverless API proxy |
-| USDA FoodData API | Food nutrition database |
 
 **Fonts:** Bebas Neue (display) · DM Sans (body) · JetBrains Mono (numbers)
 
@@ -72,8 +71,6 @@ NutriForge calculates your personalised calorie and macro targets using the **Mi
 
 ```
 nutriforge/
-├── api/
-│   └── food-search.js          # Vercel serverless proxy → USDA API
 ├── public/
 │   ├── index.html
 │   └── favicon.png
@@ -134,11 +131,9 @@ Create a `.env.local` file in the project root:
 ```env
 VITE_SUPABASE_URL=https://yourproject.supabase.co
 VITE_SUPABASE_ANON_KEY=your_anon_key_here
-VITE_USDA_API_KEY=your_usda_key_here
 ```
 
 - **Supabase keys** — [supabase.com](https://supabase.com) → Project → Settings → API
-- **USDA key** — [fdc.nal.usda.gov/api-key-signup](https://fdc.nal.usda.gov/api-key-signup) (free, instant)
 
 ### 3. Set up Supabase
 
