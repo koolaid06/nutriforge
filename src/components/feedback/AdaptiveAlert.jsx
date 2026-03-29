@@ -1,34 +1,38 @@
 export default function AdaptiveAlert({ suggestion, onApply }) {
   if (!suggestion || suggestion.type === 'on_track') {
     return (
-      <div className="card border border-forge-accent/20 bg-forge-accent/5 flex items-center gap-3">
-        <span className="text-forge-accent text-xl">✓</span>
+      <div className="flex items-center gap-3 bg-green-950/40 border border-green-800/40 rounded-2xl px-5 py-4">
+        <div className="w-8 h-8 rounded-full bg-forge-green/20 flex items-center justify-center flex-shrink-0">
+          <span className="text-forge-green text-base">✓</span>
+        </div>
         <div>
-          <p className="text-sm font-medium text-forge-accent">Progress On Track</p>
-          <p className="text-xs text-forge-subtext mt-0.5">{suggestion?.message ?? 'Keep up the consistency.'}</p>
+          <p className="font-body font-semibold text-forge-green text-sm">Progress On Track</p>
+          <p className="text-xs text-forge-subtext font-body mt-0.5">{suggestion?.message ?? 'Keep up the consistency.'}</p>
         </div>
       </div>
     )
   }
 
   const isIncrease = suggestion.type === 'increase'
-
   return (
-    <div className={`card border flex items-start gap-4
-      ${isIncrease ? 'border-forge-blue/30 bg-forge-blue/5' : 'border-forge-orange/30 bg-forge-orange/5'}`}>
-      <span className="text-2xl mt-0.5">{isIncrease ? '↑' : '↓'}</span>
+    <div className={`flex items-start gap-4 rounded-2xl px-5 py-4 border
+      ${isIncrease ? 'bg-blue-950/40 border-blue-800/40' : 'bg-orange-950/40 border-orange-800/40'}`}>
+      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 text-lg
+        ${isIncrease ? 'bg-forge-blue/20 text-forge-blue' : 'bg-forge-accent/20 text-forge-accent'}`}>
+        {isIncrease ? '↑' : '↓'}
+      </div>
       <div className="flex-1">
-        <p className={`text-sm font-medium ${isIncrease ? 'text-forge-blue' : 'text-forge-orange'}`}>
+        <p className={`font-body font-semibold text-sm ${isIncrease ? 'text-forge-blue' : 'text-forge-accent'}`}>
           Adaptive Suggestion
         </p>
-        <p className="text-xs text-forge-subtext mt-1">{suggestion.message}</p>
+        <p className="text-xs text-forge-subtext font-body mt-0.5">{suggestion.message}</p>
         <div className="flex items-center gap-3 mt-3">
-          <span className="font-mono text-xs text-forge-subtext">
-            New target: <span className="text-forge-text">{suggestion.newTarget} kcal</span>
+          <span className="text-xs font-mono text-forge-subtext">
+            New target: <span className="text-forge-text font-semibold">{suggestion.newTarget} kcal</span>
           </span>
           {onApply && (
             <button onClick={() => onApply(suggestion.newTarget)} className="btn-primary text-xs px-3 py-1.5">
-              APPLY
+              Apply
             </button>
           )}
         </div>

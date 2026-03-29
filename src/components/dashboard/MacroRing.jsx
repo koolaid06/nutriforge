@@ -1,14 +1,12 @@
 import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts'
 
-const COLORS = ['#e8ff47', '#4facfe', '#ff6b35']
+const MACROS = [
+  { key: 'protein', label: 'Protein', color: '#ffd54f' },
+  { key: 'carbs',   label: 'Carbs',   color: '#5c9fff' },
+  { key: 'fat',     label: 'Fat',     color: '#ff7043' },
+]
 
 export default function MacroRing({ totals, targets }) {
-  const macros = [
-    { name: 'Protein', value: Math.round(totals.protein * 10) / 10, target: targets?.macros?.protein },
-    { name: 'Carbs',   value: Math.round(totals.carbs   * 10) / 10, target: targets?.macros?.carbs   },
-    { name: 'Fat',     value: Math.round(totals.fat     * 10) / 10, target: targets?.macros?.fat     },
-  ]
-
   const calPct = targets?.targetCalories
     ? Math.min(100, Math.round((totals.calories / targets.targetCalories) * 100))
     : 0
@@ -18,51 +16,55 @@ export default function MacroRing({ totals, targets }) {
     <div className="card flex flex-col gap-5">
       <p className="label">TODAY'S INTAKE</p>
 
-      {/* Ring + info side by side */}
       <div className="flex items-center gap-6">
-        {/* Donut */}
-        <div className="relative flex-shrink-0 w-36 h-36 lg:w-40 lg:h-40">
+        {/* Ring */}
+        <div className="relative w-36 h-36 flex-shrink-0">
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
                 data={[{ value: calPct }, { value: 100 - calPct }]}
                 cx="50%" cy="50%"
-                innerRadius="62%" outerRadius="78%"
+                innerRadius="62%" outerRadius="80%"
                 startAngle={90} endAngle={-270}
                 dataKey="value" strokeWidth={0}
               >
-                <Cell fill="#e8ff47" />
-                <Cell fill="#1e1e2e" />
+                <Cell fill="#ff7043" />
+                <Cell fill="#2e2e2e" />
               </Pie>
             </PieChart>
           </ResponsiveContainer>
-          <div className="absolute inset-0 flex flex-col items-center justify-center gap-0.5">
-            <span className="font-display text-4xl text-forge-text leading-none">{totals.calories}</span>
-            <span className="label text-[10px]">kcal</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center">
+            <span className="font-display font-extrabold text-3xl text-forge-text leading-none">{totals.calories}</span>
+            <span className="text-[10px] font-body text-forge-subtext mt-0.5">kcal</span>
+            <span className="text-[10px] font-mono text-forge-subtext">{calPct}%</span>
           </div>
         </div>
 
-        {/* Right side */}
-        <div className="flex-1 space-y-3">
-          <p className={`text-base font-mono font-semibold ${remaining >= 0 ? 'text-forge-accent' : 'text-forge-red'}`}>
-            {remaining >= 0
-              ? `${remaining} kcal remaining`
-              : `${Math.abs(remaining)} kcal over target`}
-          </p>
-          <div className="space-y-2">
-            {macros.map(({ name, value, target }, i) => (
-              <div key={name} className="flex items-center justify-between gap-2">
-                <div className="flex items-center gap-2">
-                  <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: COLORS[i] }} />
-                  <span className="text-sm font-body text-forge-subtext">{name}</span>
-                </div>
-                <span className="font-mono text-sm">
-                  <span style={{ color: COLORS[i] }}>{value}g</span>
-                  {target && <span className="text-forge-muted"> /{target}g</span>}
-                </span>
-              </div>
-            ))}
+        {/* Macro list */}
+        <div className="flex-1 space-y-4">
+          <div>
+            <p className={`text-sm font-body font-semibold ${remaining >= 0 ? 'text-forge-green' : 'text-forge-red'}`}>
+              {remaining >= 0 ? `${remaining} kcal remaining` : `${Math.abs(remaining)} kcal over`}
+            </p>
+            <p className="text-xs text-forge-subtext font-body">of {targets?.targetCalories ?? 0} target</p>
           </div>
+
+          {MACROS.map(({ key, label, color }) => {
+            const val    = Math.round((totals[key] ?? 0) * 10) / 10
+            const target = targets?.macros?.[key] ?? 0
+            const pct    = target ? Math.min(100, Math.round((val / target) * 100)) : 0
+            return (
+              <div key={key}>
+                <div className="flex justify-between mb-1">
+                  <span className="text-xs font-body" style={{ color }}>{label}</span>
+                  <span className="text-xs font-mono text-forge-subtext">{val}g / {target}g</span>
+                </div>
+                <div className="h-1.5 bg-forge-border rounded-full overflow-hidden">
+                  <div className="h-full rounded-full" style={{ width: `${pct}%`, background: color }} />
+                </div>
+              </div>
+            )
+          })}
         </div>
       </div>
     </div>

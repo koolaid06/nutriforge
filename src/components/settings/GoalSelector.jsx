@@ -1,9 +1,7 @@
-import { PHASE_LABELS } from '../../constants/macroRatios'
-
-const GOAL_INFO = {
-  cut:      { desc: 'Lose fat, preserve muscle', delta: '−500 kcal/day', icon: '↓' },
-  maintain: { desc: 'Recomposition & maintenance', delta: '±0 kcal/day',  icon: '→' },
-  bulk:     { desc: 'Build muscle & size',        delta: '+300 kcal/day', icon: '↑' },
+const GOALS = {
+  cut:      { label: 'Cut',      icon: '↓', delta: '−500 kcal/day', desc: 'Lose fat, preserve muscle',   color: '#ef5350', bg: 'bg-red-950/40',   border: 'border-red-800/50'   },
+  maintain: { label: 'Maintain', icon: '→', delta: '±0 kcal/day',   desc: 'Recomposition & maintenance', color: '#5c9fff', bg: 'bg-blue-950/40',  border: 'border-blue-800/50'  },
+  bulk:     { label: 'Bulk',     icon: '↑', delta: '+300 kcal/day', desc: 'Build muscle & size',          color: '#4caf7d', bg: 'bg-green-950/40', border: 'border-green-800/50' },
 }
 
 export default function GoalSelector({ goal, onSelect }) {
@@ -11,54 +9,25 @@ export default function GoalSelector({ goal, onSelect }) {
     <div className="card space-y-4">
       <p className="label">TRANSFORMATION GOAL</p>
       <div className="grid grid-cols-3 gap-2">
-        {Object.entries(GOAL_INFO).map(([key, { desc, delta, icon }]) => {
-          const phase = PHASE_LABELS[key]
+        {Object.entries(GOALS).map(([key, g]) => {
           const active = goal === key
           return (
             <button
               key={key}
               onClick={() => onSelect(key)}
-              className={`relative p-3 lg:p-4 rounded-xl border text-left transition-all duration-200
-                flex flex-col gap-2
-                ${active
-                  ? `${phase.bg} ${phase.border} border`
-                  : 'bg-forge-surface border-forge-border hover:border-forge-muted'
-                }`}
+              className={`p-4 rounded-xl border text-left transition-all duration-200 flex flex-col gap-2 min-h-[120px]
+                ${active ? `${g.bg} ${g.border} border` : 'bg-forge-surface border-forge-border hover:border-forge-muted'}`}
             >
-              {/* Icon */}
-              <span className={`text-xl font-display leading-none ${active ? phase.color : 'text-forge-muted'}`}>
-                {icon}
-              </span>
-
-              {/* Phase name */}
-              <p className={`font-display text-xl lg:text-2xl tracking-wider leading-none
-                ${active ? phase.color : 'text-forge-subtext'}`}>
-                {phase.label}
-              </p>
-
-              {/* Delta — nowrap to prevent wrapping */}
-              <p className={`font-mono text-[11px] lg:text-xs whitespace-nowrap
-                ${active ? phase.color : 'text-forge-muted'}`}>
-                {delta}
-              </p>
-
-              {/* Desc — hidden on mobile, shown on lg */}
-              <p className="hidden lg:block text-xs text-forge-subtext font-body leading-relaxed">
-                {desc}
-              </p>
-
-              {/* Active indicator dot */}
-              {active && (
-                <span className={`absolute top-2 right-2 w-1.5 h-1.5 rounded-full ${phase.color.replace('text-', 'bg-')}`} />
-              )}
+              <span className="text-xl font-body" style={{ color: active ? g.color : '#555' }}>{g.icon}</span>
+              <p className="font-display font-bold text-lg leading-none" style={{ color: active ? g.color : '#a0a0a0' }}>{g.label}</p>
+              <p className="text-[10px] font-mono mt-auto" style={{ color: active ? g.color : '#555' }}>{g.delta}</p>
+              <p className="hidden lg:block text-[11px] font-body text-forge-subtext leading-snug">{g.desc}</p>
             </button>
           )
         })}
       </div>
-
-      {/* Show desc below on mobile for active goal */}
-      <p className="lg:hidden text-xs text-forge-subtext font-body bg-forge-surface rounded-xl px-4 py-3">
-        {GOAL_INFO[goal]?.desc}
+      <p className="text-xs font-body text-forge-subtext lg:hidden">
+        {GOALS[goal]?.desc}
       </p>
     </div>
   )

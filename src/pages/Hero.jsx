@@ -8,7 +8,7 @@ const FEATURES = [
 ]
 
 const STATS = [
-  { value: '2,000+', label: 'Foods in USDA database'      },
+  { value: '2,000+', label: 'Foods in curated database'      },
   { value: '16wk',   label: 'Consistency calendar view'   },
   { value: '7',      label: 'Metrics tracked per meal'    },
   { value: '500',    label: 'kcal deficit for a clean cut' },
