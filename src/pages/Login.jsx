@@ -66,7 +66,7 @@ export default function Login({ onSkip, onBack }) {
                   <span className="text-forge-accent">DATA.</span>
                 </h1>
                 <p className="text-forge-subtext text-sm font-body leading-relaxed">
-                  Sign in once to access your nutrition data on any device. No password — just a magic link.
+                  Sign in once to access your nutrition data on any device. No password needed.
                 </p>
               </div>
 
