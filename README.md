@@ -8,7 +8,7 @@
 
 ## What is NutriForge?
 
-NutriForge calculates your personalised calorie and macro targets using the **Mifflin-St Jeor formula**, scores your daily adherence with a **Discipline Score (0–100)**, tracks your weight trends, and suggests adaptive calorie adjustments — all without a backend. It runs entirely in the browser with optional cloud sync via Supabase.
+NutriForge calculates your personalised calorie and macro targets using the **Mifflin-St Jeor formula**, scores your daily adherence with a **Discipline Score (0–100)**, tracks your weight trends, and suggests adaptive calorie adjustments - all without a backend. It runs entirely in the browser with optional cloud sync via Supabase.
 
 ---
 
