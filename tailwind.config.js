@@ -1,43 +1,50 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,jsx}'],
-  darkMode: 'class',
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+  ],
   theme: {
     extend: {
-      fontFamily: {
-        display: ['Outfit', 'sans-serif'],
-        body:    ['Inter',  'sans-serif'],
-        mono:    ['JetBrains Mono', 'monospace'],
-      },
       colors: {
         forge: {
-          bg:      '#0f0f0f',
-          surface: '#1a1a1a',
-          card:    '#222222',
-          border:  '#2e2e2e',
-          accent:  '#ff7043',   // warm orange
-          green:   '#4caf7d',   // success / on-track
-          red:     '#ef5350',   // over / danger
-          blue:    '#5c9fff',   // info / carbs
-          yellow:  '#ffd54f',   // warning / protein
-          text:    '#f5f5f5',   // near white — very readable
-          subtext: '#a0a0a0',   // medium grey
-          muted:   '#555555',   // subtle
-        },
+          bg: '#0A0A0B',
+          surface: '#121317',
+          card: '#181A20',
+          border: '#262A33',
+
+          text: '#F1F5F9',
+          subtext: '#94A3B8',
+          muted: '#64748B',
+
+          accent: '#A3FF12',        // ⚡ main highlight
+          accent2: '#22D3EE',       // cyan contrast
+
+          success: '#22C55E',
+          warning: '#FACC15',
+          danger: '#EF4444',
+        }
       },
+
+      fontFamily: {
+        body: ['Inter', 'sans-serif'],
+        mono: ['JetBrains Mono', 'monospace'],
+      },
+
+      boxShadow: {
+        glow: '0 0 0 1px rgba(163,255,18,0.25), 0 6px 25px rgba(163,255,18,0.15)',
+      },
+
       animation: {
-        'fade-in':   'fadeIn 0.4s ease forwards',
-        'slide-up':  'slideUp 0.45s ease forwards',
-        'pulse-slow':'pulse 3s ease-in-out infinite',
+        fadeIn: 'fadeIn 0.4s ease-out',
       },
+
       keyframes: {
-        fadeIn:  { from: { opacity: 0 }, to: { opacity: 1 } },
-        slideUp: { from: { opacity: 0, transform: 'translateY(14px)' }, to: { opacity: 1, transform: 'translateY(0)' } },
-      },
-      borderRadius: {
-        '2xl': '16px',
-        '3xl': '24px',
-      },
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'translateY(8px)' },
+          '100%': { opacity: 1, transform: 'translateY(0)' },
+        },
+      }
     },
   },
   plugins: [],

@@ -23,7 +23,7 @@ export default function Dashboard({ profile, weightLog, onLogoClick }) {
 
   return (
     <Layout title="DASHBOARD" profile={profileWithStreak} onLogoClick={onLogoClick}>
-      <div className="max-w-6xl mx-auto flex flex-col gap-3 lg:gap-5">
+      <div className="w-full max-w-[1400px] mx-auto px-3 md:px-6 flex flex-col gap-4 lg:gap-6">
 
         {/* Adaptive alert */}
         {suggestion && suggestion.type !== 'on_track' && (

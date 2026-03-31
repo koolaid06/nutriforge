@@ -13,19 +13,31 @@ export default function Analytics({ profile, weightLog, onLogoClick }) {
 
   return (
     <Layout title="ANALYTICS" profile={profile} onLogoClick={onLogoClick}>
-      <div className="max-w-6xl mx-auto space-y-3 lg:space-y-6">
+      <div className="w-full max-w-[1400px] mx-auto px-3 md:px-6 flex flex-col gap-4 lg:gap-6">
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
           <CalorieChart weeklyData={weeklyData} target={targets?.targetCalories} />
           <MacroTrendChart weeklyData={weeklyData} />
         </div>
 
-        <ConsistencyCalendar targets={targets} />
+        <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 lg:gap-6">
-          <WeightChart weightLog={weightLog} profile={profile} />
-          <WeeklySummary weeklyAvg={weeklyAvg} bestDay={bestDay} worstDay={worstDay} targets={targets} />
-        </div>
+    {/* 🔥 Calendar (takes more space) */}
+    <div className="xl:col-span-2">
+      <ConsistencyCalendar targets={targets} />
+    </div>
+
+    {/* 🔥 Weekly Summary (fits perfectly beside it) */}
+    <div>
+      <WeeklySummary
+        weeklyAvg={weeklyAvg}
+        bestDay={bestDay}
+        worstDay={worstDay}
+        targets={targets}
+      />
+    </div>
+
+  </div>
 
       </div>
     </Layout>

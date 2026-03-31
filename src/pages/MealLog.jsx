@@ -21,7 +21,7 @@ export default function MealLog({ profile, onLogoClick }) {
 
   return (
     <Layout title="MEAL LOG" profile={profile} onLogoClick={onLogoClick}>
-      <div className="max-w-3xl mx-auto space-y-3 lg:space-y-6">
+      <div className="w-full max-w-[1400px] mx-auto px-3 md:px-6 flex flex-col gap-4 lg:gap-6">
         <MealLogger onAdd={addMeal} onClose={handleLoggerClose} meals={meals} />
         <MacroFeedback totals={totals} targets={targets} />
         <MealList

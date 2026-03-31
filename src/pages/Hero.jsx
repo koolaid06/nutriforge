@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import FitnessCarousel from '../components/hero/FitnessCarousel'
 
 const FEATURES = [
   { icon: '⬡', title: 'Smart Calorie Engine',  desc: 'BMR & TDEE calculated using the Mifflin-St Jeor formula. Your targets update instantly when your stats change.' },
@@ -8,9 +9,9 @@ const FEATURES = [
 ]
 
 const STATS = [
-  { value: '2,000+', label: 'Foods in curated database'      },
-  { value: '16wk',   label: 'Consistency calendar view'   },
-  { value: '7',      label: 'Metrics tracked per meal'    },
+  { value: '2,000+', label: 'Foods in curated database' },
+  { value: '16wk',   label: 'Consistency calendar view' },
+  { value: '7',      label: 'Metrics tracked per meal' },
   { value: '500',    label: 'kcal deficit for a clean cut' },
 ]
 
@@ -24,7 +25,6 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
     return () => clearTimeout(t)
   }, [])
 
-  // Detect Supabase magic link redirect
   useEffect(() => {
     const hash = window.location.hash
     if (hash && (hash.includes('access_token') || hash.includes('type=magiclink') || hash.includes('type=recovery'))) {
@@ -35,10 +35,9 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
     }
   }, [])
 
-  // If already logged in, clicking Start Forging goes straight to dashboard
   function handleStartClick() {
     if (isLoggedIn || isSetup) {
-      onEnter('offline') // offline = skip login, go to dashboard
+      onEnter('offline')
     } else {
       setPrompt(true)
     }
@@ -47,9 +46,22 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
   return (
     <div className="min-h-screen bg-forge-bg overflow-hidden relative flex flex-col">
 
-      {/* Background grid */}
+      {/* 🔥 Background Image */}
       <div
-        className="absolute inset-0 opacity-[0.03]"
+        className="absolute inset-0 z-0 opacity-30"
+        style={{
+          backgroundImage: `url('https://blog.mercy.com/wp-content/uploads/2020/06/Calories_1200x628-1200x610.jpg')`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
+      />
+
+      {/* 🔥 Dark Gradient Overlay */}
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-[#0a0a0f]/95 via-[#0a0a0f]/90 to-[#0a0a0f]/98" />
+
+      {/* Subtle Grid */}
+      <div
+        className="absolute inset-0 opacity-[0.04] z-0"
         style={{
           backgroundImage: `linear-gradient(#e8ff47 1px, transparent 1px),
                             linear-gradient(90deg, #e8ff47 1px, transparent 1px)`,
@@ -57,14 +69,16 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
         }}
       />
 
-      {/* Glow blob */}
+      {/* Glow */}
       <div
-        className="absolute top-[-200px] left-1/2 -translate-x-1/2 w-[700px] h-[500px]
-                   rounded-full opacity-[0.06] blur-3xl pointer-events-none"
-        style={{ background: 'radial-gradient(circle, #e8ff47, transparent 70%)' }}
+        className="absolute top-[-150px] left-1/2 -translate-x-1/2 w-[900px] h-[600px]
+                   rounded-full opacity-[0.08] blur-3xl pointer-events-none z-0"
+        style={{
+          background: 'radial-gradient(circle, #e8ff47 0%, transparent 70%)',
+        }}
       />
 
-      {/* Nav */}
+      {/* NAV */}
       <nav
         className="relative z-10 flex items-center justify-between px-4 lg:px-8 py-4 lg:py-6"
         style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.6s ease' }}
@@ -78,17 +92,18 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
         </button>
       </nav>
 
-      {/* Hero content */}
-      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 lg:px-6 text-center py-8">
+      {/* HERO */}
+      <div className="relative z-10 flex-1 flex flex-col items-center justify-center px-4 text-center py-8">
 
         {/* Badge */}
         <div
-          className="inline-flex items-center gap-2 bg-forge-accent/10 border border-forge-accent/20
-                     px-4 py-1.5 rounded-full mb-8"
+          className="inline-flex items-center gap-2 bg-forge-accent/10 border border-forge-accent/20 px-4 py-1.5 rounded-full mb-8"
           style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(12px)', transition: 'all 0.6s ease 0.1s' }}
         >
-          <span className="w-1.5 h-1.5 rounded-full bg-forge-accent animate-pulse-slow" />
-          <span className="text-forge-accent text-xs font-mono tracking-widest">ADAPTIVE NUTRITION INTELLIGENCE</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-forge-accent animate-pulse" />
+          <span className="text-forge-accent text-xs font-mono tracking-widest">
+            ADAPTIVE NUTRITION INTELLIGENCE
+          </span>
         </div>
 
         {/* Headline */}
@@ -97,12 +112,12 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
           style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(20px)', transition: 'all 0.7s ease 0.2s' }}
         >
           FORGE YOUR<br />
-          <span style={{ color: '#e8ff47' }}>BODY.</span>
+          <span className="text-forge-accent">BODY.</span>
         </h1>
 
-        {/* Subheading */}
+        {/* Sub */}
         <p
-          className="text-forge-subtext text-lg font-body max-w-xl leading-relaxed mb-10"
+          className="text-forge-subtext text-lg max-w-xl leading-relaxed mb-10"
           style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.7s ease 0.35s' }}
         >
           Not a calorie counter. A structured transformation system
@@ -115,125 +130,50 @@ export default function Hero({ onEnter, isSetup, onAuthRedirect, isLoggedIn }) {
             onClick={handleStartClick}
             onMouseEnter={() => setHovering(true)}
             onMouseLeave={() => setHovering(false)}
-            className="relative px-10 py-4 rounded-2xl font-display text-2xl tracking-widest
-                       transition-all duration-200 active:scale-95"
+            className="px-10 py-4 rounded-2xl font-display text-2xl tracking-widest transition-all duration-200 active:scale-95"
             style={{
               background: hovering ? '#f5ff70' : '#e8ff47',
               color: '#0a0a0f',
-              boxShadow: hovering ? '0 0 40px rgba(232,255,71,0.4), 0 0 80px rgba(232,255,71,0.15)' : '0 0 20px rgba(232,255,71,0.2)',
+              boxShadow: hovering
+                ? '0 0 40px rgba(232,255,71,0.4)'
+                : '0 0 20px rgba(232,255,71,0.2)',
               transform: hovering ? 'scale(1.03)' : 'scale(1)',
             }}
           >
-            START FORGING
-            <span className="inline-block ml-3 transition-transform duration-200" style={{ transform: hovering ? 'translateX(6px)' : 'translateX(0)' }}>→</span>
+            START FORGING →
           </button>
-          <p className="text-forge-muted text-xs font-mono mt-3">No sign-up required. Everything stays on your device.</p>
+          <p className="text-forge-muted text-xs font-mono mt-3">
+            No sign-up required. Everything stays on your device.
+          </p>
         </div>
 
-        {/* Stats strip */}
+        {/* Stats */}
         <div
-          className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border rounded-2xl overflow-hidden mt-10 lg:mt-16 w-full max-w-2xl"
+          className="grid grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border rounded-2xl overflow-hidden mt-10 w-full max-w-2xl"
           style={{ opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(16px)', transition: 'all 0.7s ease 0.65s' }}
         >
           {STATS.map(({ value, label }) => (
             <div key={label} className="bg-forge-surface px-4 py-4 text-center">
               <p className="font-display text-3xl text-forge-accent">{value}</p>
-              <p className="label text-[10px] mt-1 leading-snug">{label}</p>
+              <p className="label text-[10px] mt-1">{label}</p>
             </div>
           ))}
         </div>
+
       </div>
 
-      {/* Features grid */}
-      <div
-        className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border border-t border-forge-border"
-        style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.8s ease 0.8s' }}
-      >
+      <FitnessCarousel />
+      <br></br>
+      {/* FEATURES */}
+      <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-px bg-forge-border border-t border-forge-border">
         {FEATURES.map(({ icon, title, desc }) => (
-          <div key={title} className="bg-forge-surface px-4 lg:px-6 py-6 lg:py-8 group hover:bg-forge-card transition-colors duration-200">
+          <div key={title} className="bg-forge-surface px-6 py-8 hover:bg-forge-card transition">
             <span className="text-forge-accent text-2xl mb-4 block">{icon}</span>
-            <p className="font-display text-lg text-forge-text tracking-wide mb-2 group-hover:text-forge-accent transition-colors">{title}</p>
-            <p className="text-forge-subtext text-xs font-body leading-relaxed">{desc}</p>
+            <p className="font-display text-lg text-forge-text mb-2">{title}</p>
+            <p className="text-forge-subtext text-xs leading-relaxed">{desc}</p>
           </div>
         ))}
       </div>
-
-      {/* ── Choice prompt modal ── */}
-      {prompt && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 bg-forge-bg/80 backdrop-blur-sm z-50"
-            onClick={() => setPrompt(false)}
-          />
-
-          {/* Centered modal */}
-          <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
-            <div
-              className="w-full max-w-md bg-forge-card border border-forge-border rounded-3xl
-                         p-6 space-y-5 animate-slide-up shadow-2xl"
-              onClick={e => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div>
-                <h2 className="font-display text-4xl text-forge-text tracking-wider leading-none">
-                  HOW DO YOU<br />WANT TO{' '}
-                  <span className="text-forge-accent">START?</span>
-                </h2>
-                <p className="text-forge-subtext text-sm font-body mt-3 leading-relaxed">
-                  Sign in to keep your data across all your devices, or jump straight in offline.
-                </p>
-              </div>
-
-              {/* Options */}
-              <div className="space-y-3">
-                <button
-                  onClick={() => { setPrompt(false); onEnter('login') }}
-                  className="w-full p-4 rounded-2xl border border-forge-accent/30 bg-forge-accent/5
-                             text-left transition-all hover:bg-forge-accent/10 active:scale-[0.98] group"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="font-display text-xl text-forge-accent tracking-wider">SIGN IN & SYNC</p>
-                      <p className="text-forge-subtext text-xs font-body mt-1">
-                        Magic link — no password. Access your data on any device.
-                      </p>
-                    </div>
-                    <span className="text-forge-accent text-xl flex-shrink-0
-                                     group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
-                </button>
-
-                <button
-                  onClick={() => { setPrompt(false); onEnter('offline') }}
-                  className="w-full p-4 rounded-2xl border border-forge-border bg-forge-surface
-                             text-left transition-all hover:border-forge-muted active:scale-[0.98] group"
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <p className="font-display text-xl text-forge-text tracking-wider">CONTINUE OFFLINE</p>
-                      <p className="text-forge-subtext text-xs font-body mt-1">
-                        Stored on this device only. You can always sync later from Settings.
-                      </p>
-                    </div>
-                    <span className="text-forge-subtext text-xl flex-shrink-0
-                                     group-hover:translate-x-1 transition-transform">→</span>
-                  </div>
-                </button>
-              </div>
-
-              {/* Dismiss */}
-              <button
-                onClick={() => setPrompt(false)}
-                className="w-full text-center text-forge-muted text-xs font-mono py-1
-                           hover:text-forge-subtext transition-colors"
-              >
-                ← back to home
-              </button>
-            </div>
-          </div>
-        </>
-      )}
 
     </div>
   )
